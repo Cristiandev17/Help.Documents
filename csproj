@@ -1,0 +1,15 @@
+<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' AND $(PlatformTarget)=='ARM64'">
+        <RuntimeIdentifiers Condition="'$(Configuration)'=='Debug'">iossimulator-arm64;ios-arm64</RuntimeIdentifiers>
+        <RuntimeIdentifiers Condition="'$(Configuration)'=='Release'">iossimulator-arm64;ios-arm64</RuntimeIdentifiers>
+    </PropertyGroup>
+
+<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Maui.Graphics" Version="9.0.50" />
+		<PackageReference Include="Realm" Version="20.1.0" />
+		<PackageReference Include="RestSharp" Version="112.1.0" />
+		
+	</ItemGroup>
