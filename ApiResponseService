@@ -1,0 +1,7 @@
+public class ApiResponseService : IApiResponseService
+{
+    public ApiService<T> GetClient<T>() where T : class
+    {
+        return new ApiService<T>("https://dragonball-api.com/api/");
+    }
+}
