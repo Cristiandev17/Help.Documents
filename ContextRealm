@@ -1,0 +1,7 @@
+public class DataBaseContextRealm : IDataBaseContextRealm
+{
+    public Realms.Realm GetRealm()
+    {
+        return Realms.Realm.GetInstance();
+    }
+}
