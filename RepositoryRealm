@@ -1,0 +1,34 @@
+public class CharacterRepository : ICharacterRepository
+{
+    private readonly IDataBaseContextRealm _contextRealm;
+
+
+    public CharacterRepository()
+    {
+        _contextRealm = Startup.ServicesProvider.GetService<IDataBaseContextRealm>();
+    }
+
+    public void AddObject(CharacterEntity obj)
+    {
+        var realm = _contextRealm.GetRealm();
+        realm.Write(() =>
+       {
+           realm.Add(obj);
+       });
+    }
+
+    public void DeleteObject(CharacterEntity obj)
+    {
+        var realm = _contextRealm.GetRealm();
+        realm.Write(() =>
+       {
+           realm.Remove(obj);
+       });
+    }
+
+    public IQueryable<CharacterEntity> GetAllObjects()
+    {
+        var realm = _contextRealm.GetRealm();
+        return realm.All<CharacterEntity>();
+    }
+}
