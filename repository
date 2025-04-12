@@ -1,0 +1,25 @@
+public class CharacterRepository : ICharacterRepository
+{
+    private readonly IApiResponseService _apiResponseService;
+
+    public CharacterRepository()
+    {
+        _apiResponseService = Startup.GetService<IApiResponseService>();
+    }
+
+    public async Task<List<CharacterResponse>> GetAllCharactersAsync(int page)
+    {
+        var characterClient = _apiResponseService.GetClient<ResponseApiAnime>();
+
+        var response = await characterClient.GetAsync<ResponseApiAnime>(resource: $"characters?page={page}&limit=10");
+
+        if (response != null)
+        {
+            return response.Items ?? new List<CharacterResponse>();
+        }
+        else
+        {
+            throw new Exception("Error fetching characters");
+        }
+    }
+}
