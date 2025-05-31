@@ -1,4 +1,12 @@
-1. Crear un Custom Control para el Mapa
+1. Configuración necesaria en MAUI
+Asegúrate de tener los permisos y configuraciones necesarias:
+
+  A.Agrega el paquete NuGet Microsoft.Maui.Controls.Maps y Microsoft.Maui.Maps
+
+  B.En MauiProgram.cs:
+    builder.UseMauiMaps();
+
+2. Crear un Custom Control para el Mapa
   Primero, crea un control personalizado que herede de ContentView:
 
 // MapaControl.xaml.cs
@@ -63,11 +71,7 @@ public class MapaControl : ContentView
     }
 }
 
-2. Crear el ViewModel
-private Location _ubicacion;
-private ObservableCollection<Pin> _pines;
-
-3. Configurar la página que usará el control
+2. Configurar la página que usará el control
 <!-- MapaPage.xaml -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -79,13 +83,9 @@ private ObservableCollection<Pin> _pines;
     </VerticalStackLayout>
 </ContentPage>
 
-4. Configuración necesaria en MAUI
-Asegúrate de tener los permisos y configuraciones necesarias:
-
-  1.Agrega el paquete NuGet Microsoft.Maui.Controls.Maps y Microsoft.Maui.Maps
-
-  2.En MauiProgram.cs:
-    builder.UseMauiMaps();
+3. Crear el ViewModel
+private Location _ubicacion;
+private ObservableCollection<Pin> _pines;
 
 PARA ANDROID
 
