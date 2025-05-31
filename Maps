@@ -1,0 +1,124 @@
+1. Crear un Custom Control para el Mapa
+  Primero, crea un control personalizado que herede de ContentView:
+
+// MapaControl.xaml.cs
+using Microsoft.Maui.Controls.Maps;
+using Microsoft.Maui.Maps;
+
+public class MapaControl : ContentView
+{
+    public static readonly BindableProperty UbicacionProperty =
+        BindableProperty.Create(nameof(Ubicacion), typeof(Location), typeof(MapaControl), null, propertyChanged: OnUbicacionChanged);
+
+    public static readonly BindableProperty PinesProperty =
+        BindableProperty.Create(nameof(Pines), typeof(IEnumerable<Pin>), typeof(MapaControl), null, propertyChanged: OnPinesChanged);
+
+    private readonly Map _map;
+
+    public MapaControl()
+    {
+        _map = new Map
+        {
+            IsShowingUser = true,
+            MapType = MapType.Street
+        };
+
+        Content = _map;
+    }
+
+    public Location Ubicacion
+    {
+        get => (Location)GetValue(UbicacionProperty);
+        set => SetValue(UbicacionProperty, value);
+    }
+
+    public IEnumerable<Pin> Pines
+    {
+        get => (IEnumerable<Pin>)GetValue(PinesProperty);
+        set => SetValue(PinesProperty, value);
+    }
+
+    private static void OnUbicacionChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is MapaControl control && newValue is Location location)
+        {
+            control._map.MoveToRegion(MapSpan.FromCenterAndRadius(
+                location, Distance.FromKilometers(1)));
+        }
+    }
+
+    private static void OnPinesChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is MapaControl control)
+        {
+            control._map.Pins.Clear();
+            if (newValue is IEnumerable<Pin> pines)
+            {
+                foreach (var pin in pines)
+                {
+                    control._map.Pins.Add(pin);
+                }
+            }
+        }
+    }
+}
+
+2. Crear el ViewModel
+private Location _ubicacion;
+private ObservableCollection<Pin> _pines;
+
+3. Configurar la página que usará el control
+<!-- MapaPage.xaml -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TuNamespace"
+             x:Class="TuNamespace.MapaPage">
+    <VerticalStackLayout>
+        <local:MapaControl Ubicacion="{Binding Ubicacion}"
+                          Pines="{Binding Pines}" />
+    </VerticalStackLayout>
+</ContentPage>
+
+4. Configuración necesaria en MAUI
+Asegúrate de tener los permisos y configuraciones necesarias:
+
+  1.Agrega el paquete NuGet Microsoft.Maui.Controls.Maps y Microsoft.Maui.Maps
+
+  2.En MauiProgram.cs:
+    builder.UseMauiMaps();
+
+PARA ANDROID
+
+1. Configura los permisos en el archivo Platforms/Android/AndroidManifest.xml:
+
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.INTERNET" />
+
+PARA iOS
+
+1. En Platforms/iOS/Info.plist:
+
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Necesitamos tu ubicación para mostrarte mapas precisos</string>
+    
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Necesitamos acceso continuo a tu ubicación</string>
+    
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Necesitamos acceso continuo a tu ubicación</string>
+    
+    <key>NSLocationTemporaryUsageDescriptionDictionary</key>
+    <dict>
+        <key>PurposeKey</key>
+        <string>Mostrar tu ubicación en el mapa</string>
+    </dict>
+
+2. Verificación de la API Key (opcional para algunas plataformas)
+Para ciertas plataformas o funcionalidades avanzadas del mapa, es posible que necesites una API key:
+
+Para Android (Google Maps):
+En Platforms/Android/AndroidManifest.xml dentro de la etiqueta <application>:
+  <meta-data
+    android:name="com.google.android.geo.API_KEY"
+    android:value="TU_API_KEY_DE_GOOGLE_MAPS" />
